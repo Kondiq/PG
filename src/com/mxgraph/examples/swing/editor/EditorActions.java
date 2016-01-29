@@ -628,6 +628,9 @@ public class EditorActions
 					fc.addChoosableFileFilter(defaultFilter);
 
 					// Adds special vector graphics formats and HTML
+                                        fc.addChoosableFileFilter(new DefaultFileFilter(".xml",
+							"XML " + mxResources.get("file")
+									+ " (.xml)"));
 					fc.addChoosableFileFilter(new DefaultFileFilter(".mxe",
 							"mxGraph Editor " + mxResources.get("file")
 									+ " (.mxe)"));
@@ -743,8 +746,7 @@ public class EditorActions
 								.createHtmlDocument(graph, null, 1, null, null)
 								.getDocumentElement()), filename);
 					}
-					else if (ext.equalsIgnoreCase("mxe")
-							|| ext.equalsIgnoreCase("xml"))
+					else if (ext.equalsIgnoreCase("mxe"))
 					{
 						mxCodec codec = new mxCodec();
 						String xml = mxXmlUtils.getXml(codec.encode(graph
@@ -755,6 +757,17 @@ public class EditorActions
 						editor.setModified(false);
 						editor.setCurrentFile(new File(filename));
 					}
+                                        else if (ext.equalsIgnoreCase("xml"))
+					{
+                                                mxCodec codec = new mxCodec();
+						String xml = mxXmlUtils.getXml(codec.encode(graph
+								.getModel()));
+
+						mxUtils.writeFile(xml, filename);
+
+						editor.setModified(false);
+						editor.setCurrentFile(new File(filename));
+                                        }
 					else if (ext.equalsIgnoreCase("txt"))
 					{
 						String content = mxGdCodec.encode(graph);
